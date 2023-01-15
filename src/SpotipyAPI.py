@@ -74,82 +74,113 @@ class SpotifyAPI(object):
     
 #------------------------
 
-#-------Spotipy Playlist Request Chain -------
-def api_to_csv(url, spotify):
+#---------Spotipy Requests------------
+
+def get_json(url, spotify):
     
     """
-    Function designed to make an initial playlist request to Spotify Web API, iterating through every page and appending key features to one dataframe. Write final dataframe to csv in "../data/<file.csv>"
+    This function returns a json file of a request.
     
     url = String
     spotify = Instantiated SpotifyAPI object
     """
     
     url = url
-    page_trigger = True
     access_token = spotify.access_token
-    df = pd.DataFrame(columns=['track_name', 'artist', 'album', 'track_url', 'preview_url'])
     
-    while page_trigger:
-        if spotify.access_token_has_expired:
-            spotify.get_auth()
-            access_token = spotify.access_token
-        
-        headers = {
-                "Authorization": f"Bearer {access_token}"
-                }
-        
-        temp_df = pd.DataFrame()
-        req = requests.get(url, headers=headers)
-        print("Status Code: ", req.status_code)
-        
-        json_res = req.json()
-        
-        data = json_res['items']
-        
-        for i in range(0, len(data)):
-            temp_df.at[i, 'track_name'] = data[i]['track']['name']
-            temp_df.at[i, 'artist'] = data[i]['track']['artists'][0]['name']
-            temp_df.at[i, 'album'] = data[i]['track']['album']['name']
-            temp_df.at[i, 'track_url'] = data[i]['track']['href']
-            temp_df.at[i, 'preview_url'] = data[i]['track']['preview_url']
-            temp_df.at[i, 'artist_url'] = data[i]['track']['artists'][0]['href']
-        
-        df = pd.concat([temp_df, df], axis=0)
-        
-        if type(json_res['next']) == str:
-            url = json_res['next']
-            page_trigger = True
-        else:
-            page_trigger = False
+    # Check access token status, reinitialize if time has expired
+    if spotify.access_token_has_expired:
+        spotify.get_auth()
+        access_token = spotify.access_token
 
-    df.to_csv('../data/playlist_data.csv', sep=';', columns=df.columns)
-        
-#------------------------------------------------
+    # Assign token to request header
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
 
-#----------Label Printer Function----------------
-def label_printer(feature, spotify):
-    """
-    This function will apply a request chain to each track and return a Series of lists.
+    # Requests chain
+    req = requests.get(url, headers=headers)
+    print("Status Code: ", req.status_code)     # Status Code
     
-    feature = Pandas Series
-    spotify = Instantiated SpotifyAPI object
-    """
-    gen_list = []
-    
-    for item in tqdm(feature):
-        url = item
+    return req.json()
         
-        if spotify.access_token_has_expired:
-            spotify.get_auth()
-            access_token = spotify.access_token    
+
+# #-------Spotipy Playlist Request Chain -------
+# def api_to_csv(url, spotify):
+    
+#     """
+#     Function designed to make an initial playlist request to Spotify Web API, iterating through every page and appending key features to one dataframe. Write final dataframe to csv in "../data/<file.csv>"
+    
+#     url = String
+#     spotify = Instantiated SpotifyAPI object
+#     """
+    
+#     url = url
+#     page_trigger = True
+#     access_token = spotify.access_token
+#     df = pd.DataFrame(columns=['track_name', 'artist', 'album', 'track_url', 'preview_url'])
+    
+#     while page_trigger:
+#         if spotify.access_token_has_expired:
+#             spotify.get_auth()
+#             access_token = spotify.access_token
+        
+#         headers = {
+#                 "Authorization": f"Bearer {access_token}"
+#                 }
+        
+#         temp_df = pd.DataFrame()
+#         req = requests.get(url, headers=headers)
+#         print("Status Code: ", req.status_code)
+        
+#         json_res = req.json()
+        
+#         data = json_res['items']
+        
+#         for i in range(0, len(data)):
+#             temp_df.at[i, 'track_name'] = data[i]['track']['name']
+#             temp_df.at[i, 'artist'] = data[i]['track']['artists'][0]['name']
+#             temp_df.at[i, 'album'] = data[i]['track']['album']['name']
+#             temp_df.at[i, 'track_url'] = data[i]['track']['href']
+#             temp_df.at[i, 'preview_url'] = data[i]['track']['preview_url']
+#             temp_df.at[i, 'artist_url'] = data[i]['track']['artists'][0]['href']
+        
+#         df = pd.concat([temp_df, df], axis=0)
+        
+#         if type(json_res['next']) == str:
+#             url = json_res['next']
+#             page_trigger = True
+#         else:
+#             page_trigger = False
+
+#     df.to_csv('../data/playlist_data.csv', sep=';', columns=df.columns)
+        
+# #------------------------------------------------
+
+# #----------Label Printer Function----------------
+# def label_printer(feature, spotify):
+#     """
+#     This function will apply a request chain to each track and return a Series of lists.
+    
+#     feature = Pandas Series
+#     spotify = Instantiated SpotifyAPI object
+#     """
+#     gen_list = []
+    
+#     for item in tqdm(feature):
+#         url = item
+        
+#         if spotify.access_token_has_expired:
+#             spotify.get_auth()
+#             access_token = spotify.access_token    
             
-        headers = {
-                "Authorization": f"Bearer {access_token}"
-                }
+#         headers = {
+#                 "Authorization": f"Bearer {access_token}"
+#                 }
         
-        req = requests.get(url, headers=headers)
-        output = req.json()
+#         req = requests.get(url, headers=headers)
+#         output = req.json()
         
-        gen_list.append(output['genres'])
+#         gen_list.append(output['genres'])
     
-    return gen_list
+#     return gen_list
