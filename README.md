@@ -10,7 +10,7 @@ The goal for this mini project is to further explore SpotipyAPI, this time apply
 
 ## Tech Stack
 **REST**: [SpotifyAPI](https://developer.spotify.com/), [GeniusAPI](https://docs.genius.com/#/getting-started-h1)
-<br>**Packages**: [BeautifulSoup4](https://beautiful-soup-4.readthedocs.io/en/latest/), [Pandas](https://pandas.pydata.org/docs/), [Requests](https://requests.readthedocs.io/en/latest/)
+<br>**Packages**: [BeautifulSoup4](https://beautiful-soup-4.readthedocs.io/en/latest/), [Pandas](https://pandas.pydata.org/docs/), [Requests](https://requests.readthedocs.io/en/latest/), [Regex](https://docs.python.org/3/library/re.html)
 <br>**Encoding**: [Base64](https://docs.python.org/3/library/base64.html)
 
 ----------------------------------------
@@ -29,5 +29,6 @@ The goal for this mini project is to further explore SpotipyAPI, this time apply
 ![Audio Features](images/playlist-audio-features-heatmap.png)
 
 ## Part 2: Lyric Retrieval
-- #### Build GeniusAPI class.
-- #### Using GeniusAPI class, create request chain that appends lyrics to the lyrics column of song_data.csv.
+- #### Using Genius API, build a function that pulls the unique lyric url from each search endpoint. 
+- #### Append lyric url to song_data.csv dataframe.
+- #### Using beautiful soup, retreive the lyrics from their respective urls and clean with regex, append to 'Lyrics' column of song_data.csv
