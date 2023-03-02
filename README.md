@@ -32,3 +32,4 @@ The goal for this mini project is to further explore SpotipyAPI, this time apply
 - #### Using Genius API, build a function that pulls the unique lyric url from each search endpoint. 
 - #### Append lyric url to song_data.csv dataframe.
 - #### Using beautiful soup, retreive the lyrics from their respective urls and clean with regex, append to 'Lyrics' column of song_data.csv
+- #### *NOTE*: Upon completion of the code required to retrieve the lyrics for each track, I've found that some URLs returned a 404 Not Found Error to my crawler. I had to surpass this with try and except clauses, and I will have to get to the bottom of why some Genius URLs return this error to my bs4 crawler, while I am able to access them via a true browser window.
